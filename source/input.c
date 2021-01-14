@@ -841,6 +841,22 @@ int input_read_parameters(
     }
   }
 
+  /* neutrino self-interactions */
+  class_call(parser_read_double(pfc,"lgeff",&param2,&flag2,errmsg),
+      errmsg,
+      errmsg);
+
+  class_call(parser_read_double(pfc,"g_anu",&param3,&flag3,errmsg),
+      errmsg,
+      errmsg);
+
+  if (flag3 == _TRUE_) {
+    pba->g_anu = param3;
+  }
+  if (flag2 == _TRUE_) {
+    pba->g_anu = pow(10,param2);
+  }
+
   class_call(parser_read_double(pfc,"ceff2_ur",&param1,&flag1,errmsg),
              errmsg,
              errmsg);
@@ -3196,6 +3212,8 @@ int input_default_params(
   pba->deg_ncdm = NULL;
   pba->ncdm_psd_parameters = NULL;
   pba->ncdm_psd_files = NULL;
+
+  pba->g_anu=0.0;
 
   pba->Omega0_scf = 0.; /* Scalar field defaults */
   pba->attractor_ic_scf = _TRUE_;

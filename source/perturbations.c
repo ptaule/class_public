@@ -8319,6 +8319,7 @@ int perturb_derivs(double tau,
 
   /* scale factor and other background quantities */
   double a,a2,a_prime_over_a,R;
+  double Gamma_anu;
 
   /* short-cut names for the fields of the input structure */
   struct perturb_parameters_and_workspace * pppaw;
@@ -9119,6 +9120,15 @@ int perturb_derivs(double tau,
 
             for(l=3; l<pv->l_max_ncdm[n_ncdm]; l++){
               dy[idx+l] = qk_div_epsilon/(2.*l+1.0)*(l*s_l[l]*y[idx+(l-1)]-(l+1.)*s_l[l+1]*y[idx+(l+1)]);
+            }
+
+            /* neutrino collision term: relaxation time approximation */
+            if (pba->g_anu > 0.0) {
+              Gamma_anu = a * 4.4 * pba->g_anu * pow(pba->m_ncdm_in_eV[n_ncdm] / 0.05, 3) * pow(1073 * a, 3);
+
+              for (l = 2; l < pv->l_max_ncdm[n_ncdm]; ++l) {
+                dy[idx+l] -= Gamma_anu * y[idx+l];
+              }
             }
 
             /** - -----> ncdm lmax for given momentum bin (truncation as in Ma and Bertschinger)

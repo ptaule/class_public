@@ -117,6 +117,8 @@ struct background
                                              total g*=1+1=2, so deg = 0.5 g*); and its
 					     default value */
 
+  double g_anu; /**< Neutrino scattering rate Gamma */
+
   /* the following parameters help to define the analytical ncdm phase space distributions (p-s-d) */
   double * T_ncdm,T_ncdm_default;       /**< list of 1st parameters in
 					     p-s-d of non-cold relics:
