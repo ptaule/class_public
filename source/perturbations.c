@@ -9122,6 +9122,11 @@ int perturb_derivs(double tau,
               dy[idx+l] = qk_div_epsilon/(2.*l+1.0)*(l*s_l[l]*y[idx+(l-1)]-(l+1.)*s_l[l+1]*y[idx+(l+1)]);
             }
 
+            /** - -----> ncdm lmax for given momentum bin (truncation as in Ma and Bertschinger)
+                but with curvature taken into account a la arXiv:1305.3261 */
+
+            dy[idx+l] = qk_div_epsilon*y[idx+l-1]-(1.+l)*k*cotKgen*y[idx+l];
+
             /* neutrino collision term: relaxation time approximation */
             if (pba->g_anu > 0.0) {
               Gamma_anu = a * 4.4 * pba->g_anu * pow(pba->m_ncdm_in_eV[n_ncdm] / 0.05, 3) * pow(1073 * a, 3);
@@ -9130,11 +9135,6 @@ int perturb_derivs(double tau,
                 dy[idx+l] -= Gamma_anu * y[idx+l];
               }
             }
-
-            /** - -----> ncdm lmax for given momentum bin (truncation as in Ma and Bertschinger)
-                but with curvature taken into account a la arXiv:1305.3261 */
-
-            dy[idx+l] = qk_div_epsilon*y[idx+l-1]-(1.+l)*k*cotKgen*y[idx+l];
 
             /** - -----> jump to next momentum bin or species */
 
