@@ -8319,7 +8319,6 @@ int perturb_derivs(double tau,
 
   /* scale factor and other background quantities */
   double a,a2,a_prime_over_a,R;
-  double Gamma_anu;
 
   /* short-cut names for the fields of the input structure */
   struct perturb_parameters_and_workspace * pppaw;
@@ -8371,6 +8370,12 @@ int perturb_derivs(double tau,
   double f_dr, fprime_dr;
 
   double Sinv=0., dmu_idm_dr=0., dmu_idr=0., tca_slip_idm_dr=0.;
+
+  /* neutrino interacionts */
+  double z_int;
+  double tau_int;
+  double H_zint;
+  double Gamma_anu;
 
   /** - rename the fields of the input structure (just to avoid heavy notations) */
 
@@ -9087,6 +9092,28 @@ int perturb_derivs(double tau,
 
       else {
 
+        /* Precompute Gamma if neutrino interactions is on */
+        z_int = pba->z_int;
+        if (z_int > 0) {
+            /* Compute Hubble at z_int */
+            class_call(background_tau_of_z(pba,
+                        z_int,
+                        &tau_int),
+                    pba->error_message,
+                    ppt->error_message);
+            class_call(background_at_tau(pba,
+                        tau_int,
+                        pba->normal_info,
+                        pba->inter_closeby,
+                        &(ppw->last_index_back),
+                        pvecback),
+                    pba->error_message,
+                    error_message);
+
+            H_zint = pvecback[pba->index_bg_H];
+            Gamma_anu = H_zint * pow(a * (1 + z_int), pba->n_int);
+        }
+
         /** - -----> loop over species */
 
         for (n_ncdm=0; n_ncdm<pv->N_ncdm; n_ncdm++) {
@@ -9128,9 +9155,7 @@ int perturb_derivs(double tau,
             dy[idx+l] = qk_div_epsilon*y[idx+l-1]-(1.+l)*k*cotKgen*y[idx+l];
 
             /* neutrino collision term: relaxation time approximation */
-            if (pba->g_anu > 0.0) {
-              Gamma_anu = a * 4.4 * pba->g_anu * pow(pba->m_ncdm_in_eV[n_ncdm] / 0.05, 3) * pow(1073 * a, 3);
-
+            if (pba->z_int > 0) {
               for (l = 2; l < pv->l_max_ncdm[n_ncdm]; ++l) {
                 dy[idx+l] -= Gamma_anu * y[idx+l];
               }
