@@ -9047,6 +9047,10 @@ int perturb_derivs(double tau,
             ceff2_ncdm = ca2_ncdm;
             cvis2_ncdm = 3.*w_ncdm*ca2_ncdm;
           }
+          if (ppr->ncdm_fluid_approximation == ncdmfa_int) {
+            ceff2_ncdm = ca2_ncdm;
+            y[idx+2] = 0;
+          }
 
           /** - -----> exact continuity equation */
 
@@ -9080,6 +9084,9 @@ int perturb_derivs(double tau,
             dy[idx+2] = -3.0*(a_prime_over_a*(2./3.-ca2_ncdm-pseudo_p_ncdm/p_ncdm_bg/3.)+1./tau)*y[idx+2]
               +8.0/3.0*cvis2_ncdm/(1.0+w_ncdm)*s_l[2]*(y[idx+1]+metric_ufa_class);
 
+          }
+          if (ppr->ncdm_fluid_approximation == ncdmfa_int) {
+              dy[idx+2] = 0;
           }
 
           /** - -----> jump to next species */
