@@ -846,15 +846,22 @@ int input_read_parameters(
       errmsg,
       errmsg);
 
-  class_call(parser_read_double(pfc,"n_int",&param2,&flag2,errmsg),
+  class_call(parser_read_double(pfc,"log_z_int",&param2,&flag2,errmsg),
       errmsg,
       errmsg);
 
+  class_call(parser_read_double(pfc,"n_int",&param3,&flag3,errmsg),
+      errmsg,
+      errmsg);
+
+  if (flag2 == _TRUE_) {
+    pba->z_int = pow(10,param2);
+  }
   if (flag1 == _TRUE_) {
     pba->z_int = param1;
   }
-  if (flag2 == _TRUE_) {
-    pba->n_int = param2;
+  if (flag3 == _TRUE_) {
+    pba->n_int = param3;
   }
 
   class_call(parser_read_double(pfc,"ceff2_ur",&param1,&flag1,errmsg),
@@ -3214,7 +3221,7 @@ int input_default_params(
   pba->ncdm_psd_files = NULL;
 
   pba->z_int=0;
-  pba->n_int=3;
+  pba->n_int=5;
 
   pba->Omega0_scf = 0.; /* Scalar field defaults */
   pba->attractor_ic_scf = _TRUE_;
