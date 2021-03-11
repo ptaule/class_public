@@ -9164,7 +9164,7 @@ int perturb_derivs(double tau,
             /* neutrino collision term: relaxation time approximation */
             if (pba->z_int > 0) {
               for (l = 2; l < pv->l_max_ncdm[n_ncdm]; ++l) {
-                dy[idx+l] -= Gamma_anu * y[idx+l];
+                dy[idx+l] -= a * Gamma_anu * y[idx+l];
               }
             }
 
